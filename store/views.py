@@ -99,5 +99,8 @@ def updateItem(request):
     if orderItem.quantity <= 0:
         orderItem.delete()
 
-        #30:00
     return JsonResponse('Item was added', safe=False)
+
+def processOrder(request):
+    print('Data', request.body)
+    return JsonResponse('pyment complete', safe=False)
