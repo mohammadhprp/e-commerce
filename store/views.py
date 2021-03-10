@@ -9,9 +9,23 @@ from .models import (
     ShippingAddress
     )
 def store(request):
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+        cartItem = order.get_cart_items
+    else:
+        items = []
+        order = {
+            'get_cart_total': 0,
+            'get_cart_items': 0
+        }
+        cartItem = order['get_cart_items']
+
     products = Product.objects.all()
     context = {
-        'products': products
+        'products': products,
+        'cartItem': cartItem
     }
     return render(request, 'store/Store.html', context)
 
@@ -20,16 +34,19 @@ def cart(request):
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitem_set.all()
+        cartItem = order.get_cart_items
     else:
         items = []
         order = {
             'get_cart_total': 0,
             'get_cart_items': 0
         }
+        cartItem = order['get_cart_items']
 
     context = {
         'items': items,
-        'order': order
+        'order': order,
+        'cartItem': cartItem
     }
     return render(request, 'store/Cart.html', context)
 
@@ -38,16 +55,19 @@ def checkout(request):
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitem_set.all()
+        cartItem = order.get_cart_items
+
     else:
         items = []
         order = {
             'get_cart_total': 0,
             'get_cart_items': 0
         }
-
+        cartItem = order['get_cart_items']
     context = {
         'items': items,
-        'order': order
+        'order': order,
+        'cartItem': cartItem
     }
     return render(request, 'store/Checkout.html', context)
 
