@@ -69,7 +69,7 @@
     </div>
     <script type="text/javascript">
         var shipping = '{{order.shipping}}'
-        var toral = '{{ order.get_cart_total|floatformat:2 }}'
+        var total = '{{ order.get_cart_total|floatformat:2 }}'
 
         if (shipping == 'False'){
             document.getElementById('shipping-info').innerHTML = ''
@@ -109,7 +109,6 @@
                 'city': null,
                 'state': null,
                 'zipcode': null,
-
             }
 
             if(shipping != 'False'){
@@ -119,10 +118,31 @@
                 shippingInfo.zipcode = form.zipcode.value
             }
 
-            if(user != 'AnonymousUser'){
+            if(user == 'AnonymousUser'){
                 userDataForm.name = form.name.value
                 userDataForm.email = form.email.value
             }
+
+            var url = '/process_order/'
+
+            fetch(url, {
+                method:'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken':csrftoken,
+                },
+                body:JSON.stringify({
+                    'form': userDataForm,
+                    'shipping': shippingInfo,
+                })
+            })
+
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Success', data);
+                alert('Transaction complated');
+                window.location.href = "{% url 'store' %}"
+            })
         }
 
     </script>
