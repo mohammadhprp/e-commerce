@@ -74,10 +74,10 @@
             document.getElementById('shipping-info').innerHTML = ''
         }
 
-        if (uesr != 'AnonymousUser'){
+        if (user != 'AnonymousUser'){
             document.getElementById('user-info').innerHTML = ''
         }
-        if (shipping == 'False' && uesr != 'AnonymousUser'){
+        if (shipping == 'False' && user != 'AnonymousUser'){
             document.getElementById('form-wrapper').classList.add('hidden')
             document.getElementById('payment-info').classList.remove('hidden')
         }
