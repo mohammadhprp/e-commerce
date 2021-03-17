@@ -9,18 +9,13 @@ from .models import (
     OrderItem,
     ShippingAddress
     )
-from .utils import cookieCart
+from .utils import cookieCart, cartData
 
 
 def store(request):
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItem = order.get_cart_items
-    else:
-        cookieData = cookieCart(request)
-        cartItem = cookieData['cartItem']
+    data = cartData(request)
+
+    cartItem = data['cartItem']
 
     products = Product.objects.all()
     context = {
@@ -30,17 +25,11 @@ def store(request):
     return render(request, 'store/Store.html', context)
 
 def cart(request):
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItem = order.get_cart_items
-    else:
-        cookieData = cookieCart(request)
-        cartItem = cookieData['cartItem']
-        order = cookieData['order']
-        items = cookieData['items']
+    data = cartData(request)
 
+    cartItem = data['cartItem']
+    order = data['order']
+    items = data['items']
 
     context = {
         'items': items,
@@ -50,17 +39,11 @@ def cart(request):
     return render(request, 'store/Cart.html', context)
 
 def checkout(request):
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItem = order.get_cart_items
+    data = cartData(request)
 
-    else:
-        cookieData = cookieCart(request)
-        cartItem = cookieData['cartItem']
-        order = cookieData['order']
-        items = cookieData['items']
+    cartItem = data['cartItem']
+    order = data['order']
+    items = data['items']
 
 
     context = {
