@@ -21,8 +21,6 @@ def store(request):
     else:
         cookieData = cookieCart(request)
         cartItem = cookieData['cartItem']
-        order = cookieData['order']
-        items = cookieData['items']
 
     products = Product.objects.all()
     context = {
