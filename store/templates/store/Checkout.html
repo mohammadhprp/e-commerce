@@ -4,7 +4,8 @@
     <div class="row">
         <div class="col-lg-6">
             <div class="box-element" id="form-wrapper">
-                <form id="form"> {% csrf_token %}
+                <form id="form">
+                    {% csrf_token %}
                     <div id="user-info">
                         <div class="form-field">
                             <input required class="form-control" type="text" name="name" placeholder="Name..">
@@ -84,6 +85,10 @@
         }
 
         var form = document.getElementById('form')
+
+        //csrftoken = form.getElementsByTagName("input")[0].value
+        //console.log('Token', form.getElementsByTagName("input")[0].value)
+
         form.addEventListener('submit', function(e) {
             e.preventDefault()
             console.log('Form Submitted...')
@@ -126,10 +131,10 @@
             var url = '/process_order/'
 
             fetch(url, {
-                method:'POST',
-                headers:{
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken':csrftoken,
+                method: 'POST',
+                headers: {
+                    'Content-Type':'application/json',
+                    'X-CSRFToken': csrftoken,
                 },
                 body:JSON.stringify({
                     'form': userDataForm,
@@ -148,7 +153,7 @@
 
                 window.location.href = "{% url 'store' %}"
             })
-        }
 
+        }
     </script>
 {% endblock content %}

@@ -9,7 +9,7 @@ from .models import (
     OrderItem,
     ShippingAddress
     )
-from .utils import cookieCart, cartData
+from .utils import cookieCart, cartData, guestOrder
 
 
 def store(request):
@@ -88,52 +88,25 @@ def processOrder(request):
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
 
-
     else:
-        print('user is not logged in... ')
+        customer, order = guestOrder(request,data)
 
-        print('COOKIES: ', request.COOKIES)
-        full_name = data['form']['full_name ']
-        email = data['form']['email']
+        total = float(data['form']['total'])
+        order.transaction_id = transaction_id
 
-        cookieData = cookieCart(request)
-        items = cookieData['items']
+        if total == float(order.get_cart_total):
+            order.complete = True
+        order.save()
 
-        customer, created = Customer.objects.get_or_create(
-            email=email,
-        )
-        customer.full_name = full_name
-        customer.save()
 
-        order = Order.objects.create(
-            customer=customer,
-            complete=False,
-        )
-
-        for item in items:
-            product = Product.objects.get(id=item['product']['id '])
-
-            orderItem = OrderItem.objects.create(
-                product = product,
-                order = order,
-                quantity= item['product']
+        if order.shipping == True:
+            ShippingAddress.objects.create(
+                    customer = customer,
+                    order = order,
+                    address = data['shipping']['address'],
+                    city = data['shipping']['city'],
+                    state = data['shipping']['state'],
+                    zipcode = data['shipping']['zipcode'],
             )
 
-    total = float(data['form']['total'])
-    order.transaction_id = transaction_id
-
-    if total == float(order.get_cart_total):
-        order.complete = True
-    order.save()
-
-
-    if order.shipping == True:
-        ShippingAddress.objects.create(
-                customer = customer,
-                order = order,
-                address = data['shipping']['address'],
-                city = data['shipping']['city'],
-                state = data['shipping']['state'],
-                zipcode = data['shipping']['zipcode'],
-            )
     return JsonResponse('pyment complete', safe=False)
