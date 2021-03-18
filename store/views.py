@@ -91,22 +91,21 @@ def processOrder(request):
     else:
         customer, order = guestOrder(request,data)
 
-        total = float(data['form']['total'])
-        order.transaction_id = transaction_id
+    total = float(data['form']['total'])
+    order.transaction_id = transaction_id
 
-        if total == float(order.get_cart_total):
-            order.complete = True
-        order.save()
+    if total == float(order.get_cart_total):
+        order.complete = True
+    order.save()
 
 
-        if order.shipping == True:
-            ShippingAddress.objects.create(
-                    customer = customer,
-                    order = order,
-                    address = data['shipping']['address'],
-                    city = data['shipping']['city'],
-                    state = data['shipping']['state'],
-                    zipcode = data['shipping']['zipcode'],
-            )
-
+    if order.shipping == True:
+        ShippingAddress.objects.create(
+                customer = customer,
+                order = order,
+                address = data['shipping']['address'],
+                city = data['shipping']['city'],
+                state = data['shipping']['state'],
+                zipcode = data['shipping']['zipcode'],
+        )
     return JsonResponse('pyment complete', safe=False)
