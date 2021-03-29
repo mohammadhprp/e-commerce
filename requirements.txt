@@ -42,7 +42,7 @@ future==0.18.2
 gunicorn==19.9.0
 gyp==0.1
 html5lib==1.1
-httplib2==0.18.1
+httplib2==0.19.0
 idna==2.8
 importlib-metadata==1.6.0
 ipykernel==5.3.4
@@ -83,6 +83,7 @@ packaging==20.4
 pandocfilters==1.4.2
 paramiko==2.7.1
 parso==0.7.0
+pbr==5.5.1
 pep8==1.7.1
 pexpect==4.6.0
 pickleshare==0.7.5
@@ -133,6 +134,7 @@ stripe==2.27.0
 systemd-python==234
 terminado==0.8.2
 testpath==0.4.4
+testresources==2.0.1
 toml==0.10.2
 tornado==6.0.4
 traitlets==4.3.3
