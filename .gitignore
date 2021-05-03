@@ -2,3 +2,4 @@ ecommerce/__pycache__
 store/migrations
 store/__pycache__
 static/images/
+requirements.txt
